@@ -1,0 +1,660 @@
+/*
+Theme Name: Vestige
+Theme URI: https://ceriumwebdevelopment.com/themes/vestige
+Author: Cerium Web Development
+Author URI: https://ceriumwebdevelopment.com
+Description: Vestige is a dark editorial WooCommerce theme for fashion labels and concept stores. A drag-and-drop Gutenberg homepage (hero, marquee, featured products, categories, story, field notes, reviews, newsletter), a filterable shop, an AJAX cart drawer with a free-shipping meter, and product pages with button/swatch variations — all editable in wp-admin, no paid plugins, ever.
+Version: 1.0.0
+Requires at least: 6.3
+Tested up to: 6.7
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: vestige
+Tags: e-commerce, woocommerce, one-column, custom-colors, custom-logo, custom-menu, featured-images, theme-options, translation-ready, blog, block-patterns
+*/
+
+/* ---------------------------------------------------------------------------
+   Vestige base styles.
+   Design tokens mirror the original VESTIGE template: ink / coal / smoke /
+   bone / sand / vermilion. The three brand colours are Customizer-driven
+   (see inc/customizer-css.php, which re-declares --ink / --bone / --accent).
+   WooCommerce-specific styles live in assets/css/woocommerce.css.
+   --------------------------------------------------------------------------- */
+
+:root {
+    --ink: #101010;
+    --coal: #171717;
+    --smoke: #232323;
+    --bone: #EDE8E0;
+    --sand: #CFC8BC;
+    --accent: #FF4D00;
+    --vermilion: var(--accent);
+    --font-display: 'Anton', 'Arial Narrow', sans-serif;
+    --font-body: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+    --wrap: 80rem;
+    --header-h: 64px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-h) + 24px);
+}
+/* Clip (not hidden) keeps position:sticky working while stopping
+   decorative transforms painting past the viewport. */
+html, body { overflow-x: clip; }
+
+body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--bone);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent); color: #fff; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+a { color: inherit; }
+img { max-width: 100%; }
+
+h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 0.95;
+    margin: 0 0 0.5em;
+}
+p { margin: 0 0 1em; }
+
+.screen-reader-text {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+.screen-reader-text:focus {
+    position: fixed !important;
+    top: 8px; left: 8px;
+    width: auto; height: auto;
+    padding: 10px 16px;
+    clip: auto;
+    background: var(--accent);
+    color: var(--ink);
+    z-index: 200;
+    font-weight: 700;
+}
+
+.wrap {
+    max-width: var(--wrap);
+    margin-inline: auto;
+    padding-inline: 1rem;
+}
+@media (min-width: 640px) { .wrap { padding-inline: 1.5rem; } }
+
+/* --- Type helpers ------------------------------------------------------- */
+.eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    color: var(--accent);
+    margin: 0 0 1rem;
+}
+.display { font-family: var(--font-display); text-transform: uppercase; }
+.lede { color: var(--sand); font-size: 1.125rem; max-width: 34rem; }
+.accent { color: var(--accent); }
+
+/* --- Buttons & fields ----------------------------------------------------- */
+.btn-primary, .btn-ghost,
+.wp-block-button__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 12px;
+    padding: 1rem 2rem;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 0;
+    transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+.btn-primary, .wp-block-button__link {
+    background: var(--accent);
+    color: var(--ink);
+    border: 1px solid var(--accent);
+}
+.btn-primary:hover, .wp-block-button__link:hover { background: var(--bone); border-color: var(--bone); color: var(--ink); }
+.btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(237, 232, 224, 0.3);
+    color: var(--bone);
+}
+.btn-ghost:hover { border-color: var(--bone); background: var(--bone); color: var(--ink); }
+.btn-primary:disabled { opacity: .4; pointer-events: none; }
+
+.field, input[type="text"], input[type="email"], input[type="search"],
+input[type="number"], input[type="tel"], input[type="password"],
+select, textarea {
+    background: var(--coal);
+    border: 1px solid var(--smoke);
+    color: var(--bone);
+    padding: 0.75rem 1rem;
+    font: inherit;
+    font-size: 0.875rem;
+    border-radius: 0;
+    max-width: 100%;
+}
+.field::placeholder, input::placeholder, textarea::placeholder { color: rgba(207, 200, 188, 0.75); }
+.field:focus, input:focus, select:focus, textarea:focus { border-color: var(--accent); outline: none; }
+
+/* Reserved aspect boxes prevent layout shift before images load. */
+.ph { background: #1c1c1c; overflow: hidden; }
+.ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* --- Announcement bar ------------------------------------------------------ */
+.announcement {
+    background: var(--accent);
+    color: var(--ink);
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    padding: 0.5rem 1rem;
+}
+.announcement a { color: inherit; }
+
+/* --- Header ------------------------------------------------------------------ */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: color-mix(in srgb, var(--ink) 90%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--smoke);
+}
+.site-header__in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: var(--header-h);
+}
+.wordmark {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--bone);
+    line-height: 1;
+}
+.wordmark .dot { color: var(--accent); }
+.wordmark img { max-height: 40px; width: auto; }
+
+.header-actions { display: flex; align-items: center; gap: 0.75rem; }
+.burger, .cart-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: transparent;
+    border: 1px solid rgba(237, 232, 224, 0.3);
+    color: var(--bone);
+    padding: 0.7rem 1rem;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    position: relative;
+}
+.burger:hover, .cart-btn:hover { border-color: var(--bone); }
+.burger .lines { position: relative; display: block; width: 24px; height: 14px; }
+.burger .lines i {
+    position: absolute; left: 0;
+    width: 100%; height: 2px;
+    background: var(--bone);
+    transition: transform .3s ease, opacity .2s ease;
+}
+.burger .lines i:nth-child(1) { top: 0; }
+.burger .lines i:nth-child(2) { top: 6px; }
+.burger .lines i:nth-child(3) { top: 12px; }
+.burger[aria-expanded="true"] .lines i:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.burger[aria-expanded="true"] .lines i:nth-child(2) { opacity: 0; }
+.burger[aria-expanded="true"] .lines i:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+.cart-count {
+    position: absolute;
+    top: -8px; right: -8px;
+    background: var(--accent);
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 700;
+    width: 20px; height: 20px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+}
+
+/* --- Overlay menu -------------------------------------------------------------- */
+.site-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: color-mix(in srgb, var(--ink) 97%, transparent);
+    padding: calc(var(--header-h) + 2.5rem) 1rem 2.5rem;
+    overflow-y: auto;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity .3s ease, transform .3s ease, visibility .3s;
+}
+.site-menu.open { visibility: visible; opacity: 1; transform: none; }
+.site-menu ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.site-menu .menu-link {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 1;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    color: var(--bone);
+    text-decoration: none;
+}
+.site-menu .menu-link:hover, .site-menu .menu-link[aria-current="page"] { color: var(--accent); }
+.site-menu .menu-num {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--sand);
+}
+.menu-cats {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--smoke);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+}
+.menu-cats a {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--sand);
+    text-decoration: none;
+}
+.menu-cats a:hover { color: var(--bone); }
+body.menu-open { overflow: hidden; }
+
+/* --- Mobile dock ----------------------------------------------------------------- */
+.mobile-dock {
+    display: none;
+}
+@media (max-width: 767px) {
+    .mobile-dock {
+        display: flex;
+        position: fixed;
+        left: 50%;
+        bottom: 12px;
+        transform: translateX(-50%);
+        z-index: 58;
+        background: rgba(23, 23, 23, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--smoke);
+        border-radius: 999px;
+        padding: 6px;
+        gap: 4px;
+    }
+    .mobile-dock button, .mobile-dock a {
+        border: 0;
+        background: transparent;
+        color: var(--bone);
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        padding: 0.6rem 1rem;
+        border-radius: 999px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .mobile-dock button:hover, .mobile-dock a:hover { background: var(--smoke); }
+    body { padding-bottom: 64px; }
+}
+
+/* --- Footer ------------------------------------------------------------------------ */
+.site-footer { margin-top: 6rem; }
+.newsletter-band {
+    border-top: 1px solid var(--smoke);
+    background: radial-gradient(120% 140% at 50% 0%, #2b0f04 0%, var(--ink) 60%);
+    text-align: center;
+    padding: 4rem 1rem;
+}
+.newsletter-band h2 { font-size: clamp(2.25rem, 6vw, 3.75rem); margin-bottom: 1.5rem; }
+.newsletter-form {
+    display: flex;
+    max-width: 28rem;
+    margin-inline: auto;
+}
+.newsletter-form input[type="email"] { flex: 1; min-width: 0; }
+.newsletter-form .btn-primary { flex-shrink: 0; }
+.newsletter-msg { margin-top: 0.75rem; font-size: 0.875rem; color: var(--sand); min-height: 1.2em; }
+.footer-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--sand);
+}
+@media (min-width: 640px) {
+    .footer-bar { flex-direction: row; justify-content: space-between; align-items: center; }
+}
+.footer-bar .wordmark { font-size: 1.125rem; text-transform: none; letter-spacing: 0.04em; }
+.footer-bar .tagline { text-transform: uppercase; letter-spacing: 0.12em; font-size: 12px; color: var(--sand); }
+.footer-nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.footer-nav a { color: var(--sand); text-decoration: none; }
+.footer-nav a:hover { color: var(--bone); }
+.footer-socials { display: flex; gap: 1.25rem; }
+.footer-socials a { color: var(--sand); text-decoration: none; }
+.footer-socials a:hover { color: var(--accent); }
+
+/* --- Homepage pattern sections ------------------------------------------------------ */
+/* In a classic theme, core renders a .wp-block-group__inner-container wrapper
+   inside every Group block. The pattern layout classes below are grid/flex
+   containers whose items are the group's real children, so the wrapper must
+   not participate in layout — display:contents removes it from the layout
+   tree while keeping the DOM (and the block editor) untouched. */
+.vestige-hero__grid > .wp-block-group__inner-container,
+.hero-stats > .wp-block-group__inner-container,
+.cat-bento > .wp-block-group__inner-container,
+.story-grid > .wp-block-group__inner-container,
+.method-cards > .wp-block-group__inner-container,
+.editorial-note__in > .wp-block-group__inner-container {
+    display: contents;
+}
+
+.vestige-hero { position: relative; overflow: hidden; padding: 4rem 0 5rem; }
+.vestige-hero__grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+}
+@media (min-width: 1024px) {
+    .vestige-hero__grid { grid-template-columns: 1fr 1fr; }
+}
+.vestige-hero h1 {
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    line-height: 0.9;
+    margin-bottom: 1.5rem;
+}
+.vestige-hero h1 .line-accent { display: block; color: var(--accent); }
+.hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 28rem;
+    margin-top: 3rem;
+    text-align: center;
+}
+@media (min-width: 640px) { .hero-stats { text-align: left; } }
+.hero-stats .stat-value { font-family: var(--font-display); font-size: 1.875rem; line-height: 1; }
+.hero-stats .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--sand); margin-top: 0.35rem; }
+.hero-media { aspect-ratio: 4 / 5; max-height: 640px; width: 100%; }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+.flip-word { color: var(--bone); font-weight: 600; }
+.flip-word .flip-alt { color: var(--accent); }
+
+.vestige-marquee {
+    border-block: 1px solid var(--smoke);
+    padding: 0.75rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.marquee-track {
+    display: inline-block;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    color: rgba(237, 232, 224, 0.7);
+    padding-right: 2rem;
+}
+.js .marquee-track { animation: vestige-marquee 28s linear infinite; }
+@keyframes vestige-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+.section-head h2 { font-size: clamp(2.25rem, 6vw, 3.75rem); }
+.section-pad { padding-block: 5rem; }
+
+.cat-bento {
+    display: grid;
+    gap: 1rem;
+}
+@media (min-width: 768px) { .cat-bento { grid-template-columns: repeat(3, 1fr); } }
+.cat-tile {
+    display: block;
+    background: var(--coal);
+    border: 1px solid var(--smoke);
+    padding: 1.75rem;
+    text-decoration: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+.cat-tile:hover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 0 32px rgba(255, 77, 0, 0.15); }
+.cat-tile .cat-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent); }
+.cat-tile h3 { font-size: 1.875rem; margin: 0.5rem 0; }
+.cat-tile p { color: var(--sand); margin: 0; font-size: 0.9375rem; }
+
+.story-section { background: var(--coal); border-block: 1px solid var(--smoke); }
+.story-grid { display: grid; gap: 3rem; }
+@media (min-width: 1024px) {
+    .story-grid { grid-template-columns: 1fr 1fr; }
+    .story-sticky { position: sticky; top: calc(var(--header-h) + 2rem); align-self: start; }
+}
+.press-loop {
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--sand);
+}
+.method-cards { display: flex; flex-direction: column; gap: 1.25rem; }
+.method-card {
+    background: var(--ink);
+    border: 1px solid var(--smoke);
+}
+.method-card .ph { aspect-ratio: 16 / 9; }
+.method-card h3 {
+    font-family: var(--font-body);
+    font-weight: 700;
+    text-transform: none;
+    font-size: 1.125rem;
+    padding: 1rem 1.25rem;
+    margin: 0;
+    letter-spacing: 0;
+}
+
+.editorial-note { padding: 3rem 0; }
+.editorial-note__in {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+    padding: 2.5rem;
+}
+@media (min-width: 900px) { .editorial-note__in { grid-template-columns: 1fr 1fr; } }
+.editorial-note .ph { aspect-ratio: 4 / 3; }
+.editorial-note h3 { font-size: clamp(1.875rem, 4vw, 2.75rem); }
+
+.reviews-quote {
+    border-left: 2px solid var(--accent);
+    padding-left: 1rem;
+    color: var(--sand);
+    max-width: 28rem;
+    margin: 1.5rem 0 0;
+}
+.reviews-quote footer {
+    margin-top: 0.5rem;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-style: normal;
+}
+
+/* --- Generic content (posts / pages) --------------------------------------------------- */
+.site-main { min-height: 50vh; }
+.content-wrap { padding-block: 3rem; }
+.entry-title { font-size: clamp(2.25rem, 6vw, 4rem); }
+.entry-content { max-width: 46rem; }
+.entry-content a { color: var(--accent); }
+.entry-meta { color: var(--sand); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.post-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 3rem; }
+.post-nav a { color: var(--sand); text-decoration: none; }
+.post-nav a:hover { color: var(--bone); }
+.pagination, .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 2rem; }
+.page-numbers {
+    border: 1px solid var(--smoke);
+    padding: 0.5rem 0.9rem;
+    text-decoration: none;
+    color: var(--sand);
+}
+.page-numbers.current, .page-numbers:hover { border-color: var(--accent); color: var(--bone); }
+
+.blog-grid { display: grid; gap: 1.25rem; }
+@media (min-width: 768px) { .blog-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .blog-grid { grid-template-columns: repeat(3, 1fr); } }
+.post-card { background: var(--coal); border: 1px solid var(--smoke); padding: 1.5rem; }
+.post-card h2, .post-card h3 { font-size: 1.5rem; }
+.post-card h2 a, .post-card h3 a { text-decoration: none; }
+.post-card h2 a:hover, .post-card h3 a:hover { color: var(--accent); }
+.post-card .ph { aspect-ratio: 16 / 10; margin: -1.5rem -1.5rem 1.25rem; }
+
+.search-form { display: flex; max-width: 30rem; }
+.search-form input[type="search"] { flex: 1; }
+.widget { margin-bottom: 2.5rem; }
+.widget h2, .widget h3 { font-size: 1.25rem; }
+.widget ul { list-style: none; padding: 0; margin: 0; }
+.widget li { padding: 0.35rem 0; }
+.widget a { color: var(--sand); text-decoration: none; }
+.widget a:hover { color: var(--bone); }
+
+/* --- Comments --------------------------------------------------------------------------- */
+.comments-area { margin-top: 3rem; max-width: 46rem; }
+.comment-list { list-style: none; padding: 0; }
+.comment-list .comment { border-top: 1px solid var(--smoke); padding: 1.25rem 0; }
+.comment-author { font-weight: 700; }
+.comment-metadata { font-size: 0.8rem; color: var(--sand); }
+.comment-form input, .comment-form textarea { width: 100%; margin-bottom: 0.75rem; }
+.comment-form .submit { width: auto; }
+
+/* --- Motion layer (progressive enhancement; content visible without JS) ------------------
+   Keyed off data-vestige-reveal attributes carried in the block-pattern
+   markup, so sections a buyer drags, duplicates or reorders in the
+   editor keep their animation automatically. GSAP + ScrollTrigger
+   (theme.js) performs the reveals; the .is-in CSS transition is the
+   no-GSAP fallback. Elements are only pre-hidden when JS is running
+   AND the visitor allows motion. */
+.js .vestige-reveal, .js [data-vestige-reveal] { opacity: 0; }
+.js .vestige-reveal.is-in, .js [data-vestige-reveal].is-in {
+    opacity: 1;
+    transition: opacity .7s ease, transform .7s ease, filter .7s ease;
+}
+/* When GSAP is driving, it sets inline styles and adds .gsap-driven so
+   the CSS fallback never double-animates. */
+.js [data-vestige-reveal].gsap-driven { transition: none; }
+
+/* Hero — animated grain-gradient approximation of the source's WebGL
+   GrainGradient: layered radial gradients drifting slowly, plus an
+   SVG-noise overlay at low opacity for the film-grain feel. */
+.vestige-hero { isolation: isolate; }
+.vestige-grain {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    background:
+        radial-gradient(60% 50% at 20% 10%, rgba(255, 77, 0, 0.14) 0%, rgba(255, 77, 0, 0) 60%),
+        radial-gradient(80% 60% at 85% 20%, #3a3a3a 0%, rgba(58, 58, 58, 0) 55%),
+        radial-gradient(100% 80% at 50% 110%, #171717 0%, var(--ink) 70%);
+    background-size: 140% 140%, 160% 160%, 120% 120%;
+    animation: vestige-grain-drift 16s ease-in-out infinite alternate;
+}
+.vestige-grain::after {
+    content: "";
+    position: absolute;
+    inset: -50%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.055;
+    animation: vestige-grain-shift 1.2s steps(4) infinite;
+}
+@keyframes vestige-grain-drift {
+    from { background-position: 0% 0%, 100% 0%, 50% 100%; }
+    to { background-position: 30% 20%, 60% 30%, 50% 60%; }
+}
+@keyframes vestige-grain-shift {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-2%, 1%); }
+    50% { transform: translate(1%, -2%); }
+    75% { transform: translate(-1%, 2%); }
+    100% { transform: translate(0, 0); }
+}
+/* Hero headline treatment — GSAP staggers the two lines in on load;
+   this is the resting state. */
+.hero-title .line-accent { display: block; }
+
+/* Footer / pattern newsletter — animated plasma approximation of the
+   source's WebGL ClosingPlasma (ink / ember / vermilion). */
+.vestige-plasma {
+    background:
+        radial-gradient(60% 90% at 15% 0%, rgba(255, 77, 0, 0.28) 0%, rgba(255, 77, 0, 0) 55%),
+        radial-gradient(70% 100% at 85% 10%, rgba(43, 15, 4, 0.9) 0%, rgba(43, 15, 4, 0) 60%),
+        radial-gradient(120% 140% at 50% 0%, #2b0f04 0%, var(--ink) 62%);
+    background-size: 150% 150%, 160% 160%, 120% 120%;
+    animation: vestige-plasma-drift 14s ease-in-out infinite alternate;
+}
+@keyframes vestige-plasma-drift {
+    from { background-position: 0% 0%, 100% 0%, 50% 0%; }
+    to { background-position: 40% 10%, 55% 15%, 50% 0%; }
+}
+
+/* Marquee — pause on hover so the offer text can be read. */
+.vestige-marquee:hover .marquee-track { animation-play-state: paused; }
+
+/* Flipping word in the hero lede (JS swaps the two phrases). */
+.flip-word { display: inline-block; transition: opacity .3s ease, transform .3s ease; }
+.flip-word.is-out { opacity: 0; transform: translateY(6px); }
+
+.alignwide { max-width: 90rem; margin-inline: auto; }
+.alignfull { width: 100%; }
+.wp-block-group, .wp-block-columns { max-width: var(--wrap); margin-inline: auto; padding-inline: 1rem; }
+.wp-block-group.alignfull, .wp-block-columns.alignfull { max-width: none; }
+
+/* --- Reduced motion -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+    .js .vestige-reveal, .js [data-vestige-reveal] { opacity: 1; transform: none; filter: none; }
+    .vestige-grain, .vestige-grain::after, .vestige-plasma, .marquee-track { animation: none !important; }
+}
